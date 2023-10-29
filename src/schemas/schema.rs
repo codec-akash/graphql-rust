@@ -1,10 +1,17 @@
-use juniper::{EmptyMutation, EmptySubscription, FieldResult, GraphQLObject, RootNode};
+use juniper::{EmptySubscription, FieldResult, GraphQLObject, RootNode};
 
 #[derive(GraphQLObject)]
 #[graphql(description = "Ping")]
 struct Ping {
     pong: String,
     pong2: String,
+}
+
+#[derive(GraphQLObject)]
+#[graphql(description = "A member of a team")]
+struct Member {
+    id: i32,
+    name: String,
 }
 
 pub struct QueryRoot;
@@ -15,6 +22,12 @@ impl QueryRoot {
         Ok(Ping {
             pong: "Pong!".to_string(),
             pong2: String::from("Pong2!"),
+        })
+    }
+    fn member() -> FieldResult<Member> {
+        Ok(Member {
+            id: 1,
+            name: String::from("value"),
         })
     }
 }
@@ -28,6 +41,9 @@ impl MutationRoot {
             pong: String::from(ping1),
             pong2: String::from(ping2),
         })
+    }
+    fn create_memberschema(name: String) -> FieldResult<Member> {
+        Ok(Member { id: 2, name: name })
     }
 }
 

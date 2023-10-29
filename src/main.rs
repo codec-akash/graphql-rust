@@ -5,7 +5,6 @@ use actix_web::{get, middleware, route, web, App, HttpResponse, HttpServer, Resp
 use actix_web_lab::respond::Html;
 use juniper::http::{graphiql::graphiql_source, GraphQLRequest};
 
-mod graphql_schema;
 mod routes;
 use crate::routes::ping::rping;
 mod schemas;
@@ -52,6 +51,16 @@ async fn graphql_playground() -> impl Responder {
 
 #[route("/graphql", method = "GET", method = "POST")]
 async fn graphql(st: web::Data<Schema>, data: web::Json<GraphQLRequest>) -> impl Responder {
+    log::info!("check this ping");
     let user = data.execute(&st, &()).await;
     HttpResponse::Ok().json(user)
 }
+
+// #[route("/graphql/member", method = "GET", method = "POST")]
+// async fn member_query(
+//     st: web::Data<MemberSchema>,
+//     data: web::Json<GraphQLRequest>,
+// ) -> impl Responder {
+//     let acquired_data = data.execute(&st, &()).await;
+//     HttpResponse::Ok().json(acquired_data)
+// }
